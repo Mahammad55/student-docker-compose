@@ -3,6 +3,7 @@ package az.ingress.studentdockercompose.service.impl;
 import az.ingress.studentdockercompose.dto.request.StudentRequest;
 import az.ingress.studentdockercompose.dto.response.StudentResponse;
 import az.ingress.studentdockercompose.entity.Student;
+import az.ingress.studentdockercompose.enums.EnumAvailableStatus;
 import az.ingress.studentdockercompose.repository.StudentRepository;
 import az.ingress.studentdockercompose.service.StudentService;
 import lombok.AccessLevel;
@@ -20,14 +21,14 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public StudentResponse getStudentById(Long studentId) {
-        Student student = studentRepository.findStudentByIdAndActive(studentId, 1);
+        Student student = studentRepository.findStudentByIdAndActive(studentId, EnumAvailableStatus.ACTIVE.value);
 
         return builder(student);
     }
 
     @Override
     public List<StudentResponse> getAllStudents() {
-        List<Student> students = studentRepository.findAllByActive(1);
+        List<Student> students = studentRepository.findAllByActive(EnumAvailableStatus.ACTIVE.value);
 
         return students.stream()
                 .map(this::builder)
@@ -43,7 +44,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public StudentResponse updateStudent(Long studentId, StudentRequest studentRequest) {
-        Student student = studentRepository.findStudentByIdAndActive(studentId, 1);
+        Student student = studentRepository.findStudentByIdAndActive(studentId, EnumAvailableStatus.ACTIVE.value);
 
         student.setName(studentRequest.getName());
         student.setSurname(studentRequest.getSurname());
@@ -56,8 +57,8 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public StudentResponse deleteStudentById(Long studentId) {
-        Student student = studentRepository.findStudentByIdAndActive(studentId, 1);
-        student.setActive(0);
+        Student student = studentRepository.findStudentByIdAndActive(studentId, EnumAvailableStatus.ACTIVE.value);
+        student.setActive(EnumAvailableStatus.DEACTIVE.value);
         studentRepository.save(student);
 
         return builder(student);
