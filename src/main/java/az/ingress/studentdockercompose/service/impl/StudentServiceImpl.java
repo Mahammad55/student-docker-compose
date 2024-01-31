@@ -4,6 +4,7 @@ import az.ingress.studentdockercompose.dto.request.StudentRequest;
 import az.ingress.studentdockercompose.dto.response.StudentResponse;
 import az.ingress.studentdockercompose.entity.Student;
 import az.ingress.studentdockercompose.enums.EnumAvailableStatus;
+import az.ingress.studentdockercompose.mapper.StudentMapper;
 import az.ingress.studentdockercompose.repository.StudentRepository;
 import az.ingress.studentdockercompose.service.StudentService;
 import lombok.AccessLevel;
@@ -19,11 +20,13 @@ import java.util.List;
 public class StudentServiceImpl implements StudentService {
     StudentRepository studentRepository;
 
+    StudentMapper studentMapper;
+
     @Override
     public StudentResponse getStudentById(Long studentId) {
         Student student = studentRepository.findStudentByIdAndActive(studentId, EnumAvailableStatus.ACTIVE.value);
 
-        return builder(student);
+        return studentMapper.entityToResponse(student);
     }
 
     @Override
@@ -31,15 +34,15 @@ public class StudentServiceImpl implements StudentService {
         List<Student> students = studentRepository.findAllByActive(EnumAvailableStatus.ACTIVE.value);
 
         return students.stream()
-                .map(this::builder)
+                .map(studentMapper::entityToResponse)
                 .toList();
     }
 
     @Override
     public StudentResponse saveStudent(StudentRequest studentRequest) {
-        Student student = toStudent(studentRequest);
+        Student student = studentMapper.requestToEntity(studentRequest);
         studentRepository.save(student);
-        return builder(student);
+        return studentMapper.entityToResponse(student);
     }
 
     @Override
@@ -52,7 +55,7 @@ public class StudentServiceImpl implements StudentService {
         student.setAddress(studentRequest.getAddress());
         studentRepository.save(student);
 
-        return builder(student);
+        return studentMapper.entityToResponse(student);
     }
 
     @Override
@@ -61,26 +64,6 @@ public class StudentServiceImpl implements StudentService {
         student.setActive(EnumAvailableStatus.DEACTIVE.value);
         studentRepository.save(student);
 
-        return builder(student);
-    }
-
-
-    private Student toStudent(StudentRequest studentRequest) {
-        return Student.builder()
-                .name(studentRequest.getName())
-                .surname(studentRequest.getSurname())
-                .address(studentRequest.getAddress())
-                .dob(studentRequest.getDob())
-                .build();
-    }
-
-    private StudentResponse builder(Student student) {
-        return StudentResponse.builder()
-                .id(student.getId())
-                .name(student.getName())
-                .surname(student.getSurname())
-                .dob(student.getDob())
-                .address(student.getAddress())
-                .build();
+        return studentMapper.entityToResponse(student);
     }
 }

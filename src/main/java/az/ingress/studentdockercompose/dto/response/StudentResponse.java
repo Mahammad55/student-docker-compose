@@ -10,7 +10,6 @@ import java.util.Date;
 
 @Getter
 @Setter
-@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class StudentResponse {
     Long id;

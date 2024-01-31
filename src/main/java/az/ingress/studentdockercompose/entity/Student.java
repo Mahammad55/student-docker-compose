@@ -14,7 +14,6 @@ import java.util.Date;
 @Table(name = "students")
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
