@@ -40,6 +40,7 @@ public class StudentController {
         return ResponseEntity.ok(studentService.updateStudent(studentId, studentRequest));
     }
 
+    
     @DeleteMapping("/{id}")
     public ResponseEntity<StudentResponse> deleteStudent(@PathVariable("id") Long studentId) {
         return ResponseEntity.ok(studentService.deleteStudentById(studentId));

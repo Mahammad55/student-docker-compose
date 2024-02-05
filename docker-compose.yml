@@ -1,9 +1,9 @@
 version: '3.8'
 
 services:
-  mysql:
+  mysql-custom:
     image: mysql:latest
-    container_name: student-crud
+    container_name: mysql-crud
     ports:
       - '3305:3306'
     environment:
@@ -11,6 +11,15 @@ services:
       MYSQL_DATABASE: student
     volumes:
       - db:/var/lib/mysql
+
+  my-app:
+    image: student-crud
+    container_name: student-docker
+    ports:
+      - '8087:8089'
+    depends_on:
+      - mysql-custom
+    restart: always
 
 
 volumes:
