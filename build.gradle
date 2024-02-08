@@ -51,3 +51,10 @@ task dockerFile(type: Dockerfile, dependsOn: assemble) {
 	entryPoint 'java'
 	defaultCommand '-jar', "/app/${project.name}-${project.version}.jar"
 }
+
+task dockerBuilld(type: Exec, dependsOn: dockerFile) {
+	doLast {
+		println("creating image $dockerRepoUrl/${project.name}: $versionApp")
+	}
+	commandLine "docker", "build", ".", "-t", "$dockerRepoUrl/${project.name}:$versionApp"
+}
